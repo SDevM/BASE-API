@@ -178,7 +178,7 @@ class controller {
 	static async destroyUser(req, res) {
 		const decoded = JWTHelper.getToken(req, res, 'jwt_auth')
 		const uid = decoded.self
-		const user = await userModel.findByIdAnddestroy(uid).catch((err) => {
+		const user = await userModel.findByIdAndDelete(uid).catch((err) => {
 			JSONResponse.error(
 				req,
 				res,
@@ -196,7 +196,7 @@ class controller {
 
 	static async destroyUserAny(req, res) {
 		const uid = req.params.id
-		const user = await userModel.findByIdAndDeconste(uid).catch((err) => {
+		const user = await userModel.findByIdAndDelete(uid).catch((err) => {
 			JSONResponse.error(
 				req,
 				res,
