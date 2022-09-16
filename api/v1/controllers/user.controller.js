@@ -4,6 +4,11 @@ const JWTHelper = require('../../../lib/jwt.helper')
 const S3Helper = require('../../../lib/s3.helper')
 
 class controller {
+	/**
+	 * Get any user, by providing the matching ID
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static getAny(req, res) {
 		const body = JSON.parse(req.params.obj)
 		userModel
@@ -30,6 +35,11 @@ class controller {
 			})
 	}
 
+	/**
+	 * Submit the data for a new user and send off the verification email
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async signUp(req, res) {
 		const body = req.body
 		const now = Date.now().toString(16)
@@ -58,6 +68,11 @@ class controller {
 		}
 	}
 
+	/**
+	 * Use an email and password to log in to a user account
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async signIn(req, res) {
 		const body = req.body
 		const user = await userModel
@@ -92,6 +107,11 @@ class controller {
 		} else JSONResponse.error(req, res, 404, 'Account does not exist')
 	}
 
+	/**
+	 * Resumes an active jwt implemented session
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async session(req, res) {
 		const decoded = JWTHelper.getToken(req, res, 'jwt_auth')
 		if (decoded && decoded.type == 1) {
@@ -110,6 +130,11 @@ class controller {
 	}
 
 	//Update
+	/**
+	 * Activate a user account for whatever purposes
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async verifyUser(req, res) {
 		const uid = req.params.id
 		const user = await userModel
@@ -133,7 +158,11 @@ class controller {
 		}
 	}
 
-	//Refactor to async await
+	/**
+	 * Updates the current user with new data
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async updateUser(req, res) {
 		const body = req.body
 		body.profile_pic = req.file
@@ -155,6 +184,11 @@ class controller {
 		} else JSONResponse.error(req, res, 404, 'Could not find specified user')
 	}
 
+	/**
+	 * Updates any user provided an ID
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async updateUserAny(req, res) {
 		const uid = req.params.id
 		const body = req.body
@@ -175,6 +209,11 @@ class controller {
 		} else JSONResponse.error(req, res, 404, 'Could not find specified user')
 	}
 
+	/**
+	 * Deletes the current user
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async destroyUser(req, res) {
 		const decoded = JWTHelper.getToken(req, res, 'jwt_auth')
 		const uid = decoded.self
@@ -194,6 +233,11 @@ class controller {
 		}
 	}
 
+	/**
+	 * Deletes any user provided an ID
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 */
 	static async destroyUserAny(req, res) {
 		const uid = req.params.id
 		const user = await userModel.findByIdAndDelete(uid).catch((err) => {
