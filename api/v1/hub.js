@@ -37,14 +37,19 @@ router
 	.post(userController.signIn)
 	.get(userController.session)
 	.patch(userController.updateUser)
-	.delete(userController.destroyUser)
+	.delete(logout)
 router.route('/users/register/:id').get(userController.verifyUser)
-router.route('/users/register').post(userController.signUp)
+router.route('/users/register').post(userController.signUp).delete(userController.destroyUser)
 router
 	.route('/users/:id')
 	.all(typeCheck(['admin']))
 	.get(userController.getAny)
 	.patch(userController.updateUserAny)
 	.delete(userController.destroyUserAny)
+
+function logout(req, res) {
+	JWTHelper.killToken(req, res, 'jwt_auth')
+	JSONResponse.success(req, res, 200, 'Logged out successfully!')
+}
 
 module.exports = router
