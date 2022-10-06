@@ -2,10 +2,10 @@
 	"trailingComma": "es5",
 	"arrowParens": "always",
 	"useTabs": true,
-	"tabWidth": 3,
+	"tabWidth": 4,
 	"semi": false,
 	"singleQuote": true,
 	"bracketSameLine": true,
-	"printWidth": 80,
+	"printWidth": 100,
 	"bracketSpacing": true
 }

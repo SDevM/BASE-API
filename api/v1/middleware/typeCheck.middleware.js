@@ -2,6 +2,7 @@ const JSONResponse = require('../../../lib/json.helper')
 const JWTHelper = require('../../../lib/jwt.helper')
 
 const typeCheck = (types) => {
+	const originaltypes = types
 	for (let index = 0; index < types.length; index++) {
 		switch (types[index]) {
 			case 'driver':
@@ -17,14 +18,15 @@ const typeCheck = (types) => {
 	}
 	return async (req, res, next) => {
 		let deco = JWTHelper.getToken(req, res, 'jwt_auth')
-		if (types.includes(deco.type)) {
+		console.log(deco)
+		if (deco && types.includes(deco.type)) {
 			next()
 		} else {
 			JSONResponse.error(
 				req,
 				res,
 				401,
-				'Access denied! Please log in, or access this route through the appropriate means'
+				`Access denied! Route reserved for ${originaltypes.join(', ')}.`
 			)
 		}
 	}
