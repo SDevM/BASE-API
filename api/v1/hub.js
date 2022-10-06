@@ -44,9 +44,9 @@ router
 	.post(userController.signIn)
 	.get(userController.session)
 	.patch(userController.updateUser)
-	.delete(userController.destroyUser)
+	.delete(logout)
 router.route('/users/register/:id').get(userController.verifyUser)
-router.route('/users/register').post(upload.single('profile_pic'), userController.signUp)
+router.route('/users/register').post(upload.single('profile_pic'), userController.signUp).delete(userController.destroyUser)
 router
 	.route('/users/:id')
 	.all(typeCheck(['admin']))
