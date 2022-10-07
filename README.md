@@ -1,4 +1,4 @@
-# Project Title
+# BASE API
 
 Fork this repo for an instant boilerplate API with user management and inventory management, applying amazon s3 to store profile pictures and jwt cookies to verify logins.
 
