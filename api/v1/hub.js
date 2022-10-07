@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const multer = require('multer')
+const adminsController = require('./controllers/admins.controller')
 const itemsController = require('./controllers/items.controller')
 const upload = multer()
 const userController = require('./controllers/users.controller')
@@ -54,7 +55,7 @@ router
 	.patch(userController.updateUserAny)
 	.delete(userController.destroyUserAny)
 
-router.route('/admins').post(adminController.signIn).get(adminController.session)
+router.route('/admins').post(adminsController.signIn).get(adminsController.session)
 
 router
 	.route('/items')
