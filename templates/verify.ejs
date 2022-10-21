@@ -4,13 +4,12 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>User Verification</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 	</head>
 	<body>
 		<section class="text-white bg-gray-900">
-			<div
-				class="px-4 py-32 mx-auto max-w-screen-xl lg:h-screen lg:items-center lg:flex">
+			<div class="px-4 py-32 mx-auto max-w-screen-xl lg:h-screen lg:items-center lg:flex">
 				<div class="max-w-3xl mx-auto text-center">
 					<h1
 						class="text-3xl font-extrabold text-transparent sm:text-5xl bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
@@ -18,9 +17,7 @@
 					</h1>
 
 					<% if(Details) {%>
-					<p class="max-w-xl mx-auto mt-4 sm:leading-relaxed sm:text-xl">
-						<%=Details%>
-					</p>
+					<p class="max-w-xl mx-auto mt-4 sm:leading-relaxed sm:text-xl"><%=Details%></p>
 					<%} else {%>
 					<div class="flex flex-wrap justify-center mt-8 gap-4">
 						<a
