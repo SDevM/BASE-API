@@ -22,14 +22,21 @@ router.all('', (req, res) => {
 	}
 	const descriptions = [
 		`API DOCS URL`,
-		`Route for managing logins, session resumptions, user profile updates and deleting profile.`,
-		`Activates a newly registered user.`,
-		`Registers a new user.`,
-		`Administrative management of users via IDs.`,
+		`Manage users as a CRUD collection where an ID is not needed.
+		POST to Sign Up
+		GET to validate a session
+		PATCH to update the current user
+		DELETE to delete the current user`,
+		`Logs a user in.`,
+		`Verification route for a newly registered account.`,
+		`Administrative management of users as a CRUD collection via IDs.
+		GET any user by ID
+		PATCH any user by ID
+		DELETE any user by ID`,
 		`Route for managing logins and session resumption for admins.`,
 		`Route for collecting all items or (admin)creating an item.`,
 		`Administrative management of items via IDs.`,
-		`Log out for any session.`,
+		`Destroy the session and thereby log out.`,
 	]
 	let body = {
 		name: 'BasicAPI v1',
@@ -42,19 +49,23 @@ router.all('', (req, res) => {
 
 router
 	.route('/users')
-	.post(userController.signIn)
-	.get(userController.session)
+	.post(upload.single('profile_pic'), userController.signUp)
+	.get(userController.session, typeCheck(['admin']), userController.get)
 	.patch(userController.updateUser)
-	.delete(logout)
-router.route('/users/register/:id').get(userController.verifyUser)
-router.route('/users/register').post(upload.single('profile_pic'), userController.signUp).delete(userController.destroyUser)
+	.delete(userController.destroyUser)
+
+router.all('/user/login', userController.signIn)
+
+router.all('/user/verify/:id(^[a-fA-Fd]{24}$)', userController.verifyUser)
+
 router
-	.route('/users/:id')
+	.route('/users/:id(^[a-fA-Fd]{24}$)')
 	.all(typeCheck(['admin']))
-	.get(userController.getAny)
+	.get(userController.getId)
 	.patch(userController.updateUserAny)
 	.delete(userController.destroyUserAny)
 
+// TODO Fix Below routes as above
 router.route('/admins').post(adminsController.signIn).get(adminsController.session)
 
 router
@@ -63,7 +74,7 @@ router
 	.all(typeCheck(['admin']))
 	.post(upload.single('image'), itemsController.add)
 router
-	.route('/items/:id')
+	.route('/items/:id(^[a-fA-Fd]{24}$)')
 	.all(typeCheck(['admin']))
 	.patch(itemsController.update)
 	.delete(itemsController.destroy)
