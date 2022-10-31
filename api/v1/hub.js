@@ -54,9 +54,9 @@ router
 	.patch(userController.updateUser)
 	.delete(userController.destroyUser)
 
-router.all('/user/login', userController.signIn)
+router.all('/users/login', userController.signIn)
 
-router.all('/user/verify/:id(^[a-fA-Fd]{24}$)', userController.verifyUser)
+router.all('/users/verify/:id(^[a-fA-Fd]{24}$)', userController.verifyUser)
 
 router
 	.route('/users/:id(^[a-fA-Fd]{24}$)')
@@ -65,7 +65,6 @@ router
 	.patch(userController.updateUserAny)
 	.delete(userController.destroyUserAny)
 
-// TODO Fix Below routes as above
 router.route('/admins').post(adminsController.signIn).get(adminsController.session)
 
 router
