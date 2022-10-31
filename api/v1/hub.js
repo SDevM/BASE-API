@@ -24,7 +24,7 @@ router.all('', (req, res) => {
 		`API DOCS URL`,
 		`Manage users as a CRUD collection where an ID is not needed.
 		POST to Sign Up
-		GET to validate a session
+		GET to validate a session or (admin) Get users as CRUD collection with pagination and filtration
 		PATCH to update the current user
 		DELETE to delete the current user`,
 		`Logs a user in.`,
@@ -36,7 +36,7 @@ router.all('', (req, res) => {
 		`Route for managing logins and session resumption for admins.`,
 		`Route for collecting all items or (admin)creating an item.`,
 		`Administrative management of items via IDs.`,
-		`Destroy the session and thereby log out.`,
+		`Destroy the session and thereby log-out.`,
 	]
 	let body = {
 		name: 'BasicAPI v1',
