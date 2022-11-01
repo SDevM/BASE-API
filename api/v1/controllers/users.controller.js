@@ -10,9 +10,18 @@ class controller {
 	 * @param {import('express').Response} res
 	 */
 	static get(req, res) {
-		const body = JSON.parse(req.params.obj)
+		let { page, limit, field, value } = req.query
+		let filterBody = {}
+		if (field.length == value.length) {
+			field.forEach((e, index) => {
+				filterBody[e] = value[index]
+			})
+		}
+		if (page < 0) page = 1
 		userModel
-			.find(body ?? {})
+			.find(filterBody)
+			.skip((page - 1) * limit)
+			.limit(limit)
 			.then((results) => {
 				if (results.length > 0)
 					JSONResponse.success(req, res, 200, 'Collected matching users', results)

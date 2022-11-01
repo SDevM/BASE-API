@@ -15,15 +15,19 @@ class itemsController {
 		if (page && limit && [10, 20, 25, 50].includes(limit) && page > 0) {
 			let bucket = Math.floor((page * limit) / 100)
 			let indexStart = (page * limit) % 100
-			let filterBody = { customID: bucket }
+			let filterBody = {}
 			if (field.length == value.length) {
 				field.forEach((e, index) => {
 					filterBody[e] = value[index]
 				})
 			}
-			const list = await intemBucketModel.findOne(filterBody).catch((err) => {
-				JSONResponse.error(req, res, 500, 'Database Error', err)
-			})
+			const list = await intemBucketModel
+				.findOne({
+					customID: { step: bucket, details: new Map(Object.entries(filterBody)) },
+				})
+				.catch((err) => {
+					JSONResponse.error(req, res, 500, 'Database Error', err)
+				})
 			if (list.length > 0) {
 				let subArray = list.slice(indexStart, indexStart + limit)
 				JSONResponse.success(req, res, 200, 'Collected matching documents', subArray)
