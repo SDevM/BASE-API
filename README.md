@@ -1,4 +1,4 @@
-# BASE API
+# BASE API \*\* UNTESTED
 
 Fork this repo for an instant boilerplate API with user management and inventory management, applying amazon s3 to store profile pictures and jwt cookies to verify logins.
 
@@ -15,11 +15,11 @@ https://www.mongodb.com/docs/atlas/getting-started/ >> ATLAS UI
 
 ### Prerequisites
 
--  Node/npm
--  MongoDB Atlas Cluster
--  Amazon S3 Bucket
--  Gmail app password
--  Fill Environment Variables
+-   Node/npm
+-   MongoDB Atlas Cluster
+-   Amazon S3 Bucket
+-   Gmail app password
+-   Fill Environment Variables
 
 ### Installation
 
