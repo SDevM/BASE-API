@@ -6,6 +6,7 @@ const app = express()
 const API_V1 = require('./api/v1/hub.js')
 const { NAME, CORS, SERVER_SECRET, DOMAIN, PORT, PRODUCTION } = process.env
 const APP_NAME = NAME || 'Express API'
+const useragent = require('express-useragent')
 
 // Establish API
 app.all('', (req, res) => {
@@ -23,6 +24,7 @@ app.options(
 		credentials: true,
 	})
 )
+app.use(useragent.express())
 app.use(
 	cors({
 		origin: CORS,

@@ -24,7 +24,7 @@ router.all('', (req, res) => {
 		`API DOCS URL`,
 		`Manage users as a CRUD collection where an ID is not needed.
 		POST to Sign Up
-		GET to validate a session
+		GET to validate a session or (admin) Get users as CRUD collection with pagination and filtration
 		PATCH to update the current user
 		DELETE to delete the current user`,
 		`Logs a user in.`,
@@ -36,7 +36,7 @@ router.all('', (req, res) => {
 		`Route for managing logins and session resumption for admins.`,
 		`Route for collecting all items or (admin)creating an item.`,
 		`Administrative management of items via IDs.`,
-		`Destroy the session and thereby log out.`,
+		`Destroy the session and thereby log-out.`,
 	]
 	let body = {
 		name: 'BasicAPI v1',
@@ -54,9 +54,9 @@ router
 	.patch(userController.updateUser)
 	.delete(userController.destroyUser)
 
-router.all('/user/login', userController.signIn)
+router.all('/users/login', userController.signIn)
 
-router.all('/user/verify/:id(^[a-fA-Fd]{24}$)', userController.verifyUser)
+router.all('/users/verify/:id(^[a-fA-Fd]{24}$)', userController.verifyUser)
 
 router
 	.route('/users/:id(^[a-fA-Fd]{24}$)')
@@ -65,7 +65,6 @@ router
 	.patch(userController.updateUserAny)
 	.delete(userController.destroyUserAny)
 
-// TODO Fix Below routes as above
 router.route('/admins').post(adminsController.signIn).get(adminsController.session)
 
 router
