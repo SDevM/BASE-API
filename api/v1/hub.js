@@ -13,6 +13,8 @@ const typeCheck = require('./middleware/typeCheck.middleware')
  * from the descriptions array, when you add routes, it will change on the next load to reflect new routes
  * automatically. They appear in the same order as they are written in the code, match the array descriptions
  * to this order.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  */
 router.all('', (req, res) => {
 	let concat = []
@@ -93,6 +95,11 @@ router.route('/s3/:key').get(typeCheck(['user', 'admin']), async (req, res) => {
 
 module.exports = router
 
+/**
+ * Destroy the session
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
 function logout(req, res) {
 	JWTHelper.killToken(req, res, 'jwt_auth')
 	JSONResponse.success(req, res, 200, 'Logged out successfully!')

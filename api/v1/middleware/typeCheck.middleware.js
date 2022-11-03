@@ -16,6 +16,13 @@ const typeCheck = (types) => {
 				break
 		}
 	}
+
+	/**
+	 * Erase an item by ID
+	 * @param {import('express').Request} req
+	 * @param {import('express').Response} res
+	 * @param {import('express').NextFunction} next
+	 */
 	return async (req, res, next) => {
 		let deco = JWTHelper.getToken(req, res, 'jwt_auth')
 		console.log(deco)

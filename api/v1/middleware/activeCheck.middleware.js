@@ -3,6 +3,12 @@ const userModel = require('../../../lib/db/models/user.model')
 const JSONResponse = require('../../../lib/json.helper')
 const JWTHelper = require('../../../lib/jwt.helper')
 
+/**
+ * Erase an item by ID
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ * @param {import('express').NextFunction} next
+ */
 const activeCheck = async (req, res, next) => {
 	let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
 	let result
