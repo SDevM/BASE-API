@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const multer = require('multer')
+const JSONResponse = require('../../lib/json.helper')
+const S3Helper = require('../../lib/s3.helper')
 const adminsController = require('./controllers/admins.controller')
 const itemsController = require('./controllers/items.controller')
 const upload = multer()
@@ -79,6 +81,15 @@ router
 	.delete(itemsController.destroy)
 
 router.route('/logout').all(logout)
+
+router.route('/s3/:key').get(async (req, res) => {
+	let file = await S3Helper.download(req.params.key).catch((err) => {
+		console.error(err);
+		JSONResponse.error(req, res, 500, 'Failed to communicate with file storage')
+	})
+	if (file) res.send(file)
+	else JSONResponse.error(req, res, 404, 'File not found')
+})
 
 module.exports = router
 
