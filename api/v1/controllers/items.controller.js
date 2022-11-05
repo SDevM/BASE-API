@@ -64,8 +64,8 @@ class itemsController {
 		let body = req.body
 		let newdoc = new itemModel(body)
 		let now = Date.now().toString(16)
-		let manageupload = await S3Helper.upload(req.files['image'], now)
-		if (manageupload) body.image = now
+		let manageupload = await S3Helper.upload(req.files['image'], now + '_img')
+		if (manageupload) body.image = now + '_img'
 		let invalid = undefined
 		await newdoc.validate().catch((err) => {
 			invalid = true
