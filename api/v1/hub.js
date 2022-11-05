@@ -55,7 +55,7 @@ router
 	.route('/users')
 	.post(upload.single('profile_pic'), userController.signUp)
 	.get(userController.session, typeCheck(['admin']), userController.get)
-	.patch(userController.updateUser)
+	.patch(upload.single('profile_pic'), userController.updateUser)
 	.delete(userController.destroyUser)
 
 router.all('/users/login', userController.signIn)
@@ -75,11 +75,11 @@ router
 	.route('/items')
 	.get(itemsController.get)
 	.all(typeCheck(['admin']))
-	.post(upload.single('image'), itemsController.add)
+	.post(upload.fields(['image', 'clip']), itemsController.add)
 router
 	.route('/items/:id(^[a-fA-Fd]{24}$)')
 	.all(typeCheck(['admin']))
-	.patch(itemsController.update)
+	.patch(upload.fields(['image', 'clip']), itemsController.update)
 	.delete(itemsController.destroy)
 
 router.route('/logout').all(logout)
