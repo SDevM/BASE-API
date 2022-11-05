@@ -75,11 +75,11 @@ router
 	.route('/items')
 	.get(itemsController.get)
 	.all(typeCheck(['admin']))
-	.post(upload.fields(['image', 'clip']), itemsController.add)
+	.post(upload.single('image'), itemsController.add)
 router
 	.route('/items/:id(^[a-fA-Fd]{24}$)')
 	.all(typeCheck(['admin']))
-	.patch(upload.fields(['image', 'clip']), itemsController.update)
+	.patch(upload.single('image'), itemsController.update)
 	.delete(itemsController.destroy)
 
 router.route('/logout').all(logout)
