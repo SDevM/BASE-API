@@ -66,9 +66,9 @@ class itemsController {
 		let now = Date.now().toString(16)
 		let manageupload = await S3Helper.upload(req.files['image'], now + '_img')
 		if (manageupload) body.image = now + '_img'
-		let invalid = undefined
+		let valid = true
 		await newdoc.validate().catch((err) => {
-			invalid = true
+			valid = false
 			JSONResponse.error(
 				req,
 				res,
@@ -78,7 +78,7 @@ class itemsController {
 				err.errors[Object.keys(err.errors)[Object.keys(err.errors).length - 1]]
 			)
 		})
-		if (!invalid) {
+		if (valid) {
 			const newerdoc = await newdoc.save().catch((err) => {
 				JSONResponse.error(req, res, 500, 'Database Error', err)
 			})
