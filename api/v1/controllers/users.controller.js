@@ -127,7 +127,7 @@ class controller {
 				})
 				if (user) JSONResponse.success(req, res, 200, 'Session resumed', user)
 				else JSONResponse.error(req, res, 404, 'Account does not exist')
-			} else JSONResponse.error(req, res, 401, 'No session!')
+			} else JSONResponse.error(req, res, 401, 'No session')
 		} else {
 			next()
 		}

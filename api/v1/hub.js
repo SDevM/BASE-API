@@ -44,7 +44,7 @@ router.all('', (req, res) => {
 	]
 	let body = {
 		name: 'BasicAPI v1',
-		version: '1.0.0',
+		version: '1.2.0',
 		routes: concat,
 		description: descriptions,
 	}

@@ -123,7 +123,7 @@ class adminsController {
 			})
 			if (admin) JSONResponse.success(req, res, 200, 'Session resumed', admin)
 			else JSONResponse.error(req, res, 404, 'Account does not exist')
-		} else JSONResponse.error(req, res, 401, 'No session!')
+		} else JSONResponse.error(req, res, 401, 'No session')
 	}
 
 	//Update
