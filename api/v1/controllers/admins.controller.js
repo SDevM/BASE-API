@@ -84,39 +84,30 @@ class adminsController {
 	 * @param {import('express').Request} req
 	 * @param {import('express').Response} res
 	 */
-	static signIn(req, res) {
-		let body = req.body
-		adminModel
-			.findOne({ token: body.token })
-			.then((result) => {
-				if (result) {
-					compare(
-						body.passphrase,
-						Buffer.from(result.passphrase, 'utf-8').toString(),
-						(err, same) => {
-							if (err) {
-								JSONResponse.error(req, res, 500, 'Server Error', err)
-							} else if (same) {
-								JWTHelper.setToken(
-									req,
-									res,
-									{
-										type: 0,
-										self: result._id.toString(),
-									},
-									'jwt_auth'
-								)
-								JSONResponse.success(req, res, 200, 'Successful login')
-							} else {
-								JSONResponse.error(req, res, 401, "Password doesn't match")
-							}
-						}
-					)
-				} else JSONResponse.error(req, res, 404, 'No document found')
+	static async signIn(req, res) {
+		const body = req.body
+		const admin = await adminModel.findOne({ email: body.email }).catch((err) => {
+			JSONResponse.error(req, res, 500, 'Fatal error handling admin model', err)
+		})
+		if (admin) {
+			const login = await admin.SignIn(body.password).catch((err) => {
+				JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
 			})
-			.catch((err) => {
-				JSONResponse.error(req, res, 500, 'Database Error', err)
-			})
+			if (login) {
+				JWTHelper.setToken(
+					req,
+					res,
+					{
+						type: 1,
+						self: admin._id.toString(),
+					},
+					'jwt_auth'
+				)
+				JSONResponse.success(req, res, 200, 'Successful login')
+			} else {
+				JSONResponse.error(req, res, 401, 'Password does not match')
+			}
+		} else JSONResponse.error(req, res, 404, 'Account does not exist')
 	}
 
 	/**
@@ -124,18 +115,15 @@ class adminsController {
 	 * @param {import('express').Request} req
 	 * @param {import('express').Response} res
 	 */
-	static session(req, res) {
-		let decoded = JWTHelper.getToken(req, res, 'jwt_auth')
-		if (decoded && decoded.type == 2)
-			adminModel
-				.findById(decoded.self)
-				.then((result) => {
-					JSONResponse.success(req, res, 200, 'Session resumed', result)
-				})
-				.catch((err) => {
-					JSONResponse.error(req, res, 500, 'Database Error', err)
-				})
-		else JSONResponse.error(req, res, 401, 'No session')
+	static async session(req, res) {
+		const decoded = JWTHelper.getToken(req, res, 'jwt_auth')
+		if (decoded && decoded.type == 1) {
+			const admin = await adminModel.findById(decoded.self).catch((err) => {
+				JSONResponse.error(req, res, 500, 'Failure handling admin model', err)
+			})
+			if (admin) JSONResponse.success(req, res, 200, 'Session resumed', admin)
+			else JSONResponse.error(req, res, 404, 'Account does not exist')
+		} else JSONResponse.error(req, res, 401, 'No session!')
 	}
 
 	//Update

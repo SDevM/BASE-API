@@ -93,7 +93,7 @@ class controller {
 			JSONResponse.error(req, res, 500, 'Fatal error handling user model', err)
 		})
 		if (user) {
-			const login = await result.SignIn(body.password).catch((err) => {
+			const login = await user.SignIn(body.password).catch((err) => {
 				JSONResponse.error(req, res, 500, 'Fatal Error! Server Down!', err)
 			})
 			if (login) {
@@ -102,7 +102,7 @@ class controller {
 					res,
 					{
 						type: 1,
-						self: result._id.toString(),
+						self: user._id.toString(),
 					},
 					'jwt_auth'
 				)
