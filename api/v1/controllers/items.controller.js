@@ -1,9 +1,9 @@
-const intemBucketModel = require('../../../lib/db/models/item.bucket.model')
+const itemBucketModel = require('../../../lib/db/models/item.bucket.model')
 const itemModel = require('../../../lib/db/models/item.model')
 const JSONResponse = require('../../../lib/json.helper')
+const S3Helper = require('../../../lib/s3.helper')
 
 class itemsController {
-	// TODO Research into populate, in order to fill item references in the bucket
 	//Read
 	/**
 	 * Get collective items
@@ -12,26 +12,30 @@ class itemsController {
 	 */
 	static async get(req, res) {
 		let { page, limit, field, value } = req.query
-		if (page && limit && [10, 20, 25, 50].includes(limit) && page > 0) {
-			let bucket = Math.floor((page * limit) / 100)
-			let indexStart = (page * limit) % 100
-			let filterBody = {}
-			if (field.length == value.length) {
-				field.forEach((e, index) => {
-					filterBody[e] = value[index]
-				})
+		if (page && limit && [10, 20, 25, 50].includes(parseInt(limit)) && parseInt(page) > 0) {
+			let bucketnum = Math.floor((page * limit) / 100) + 1
+			let indexStart = ((page - 1) * limit) % 100
+			let filterBody = {
+				'customID.step': bucketnum,
 			}
-			const list = await intemBucketModel
-				.findOne({
-					customID: { step: bucket, details: new Map(Object.entries(filterBody)) },
+			if (field && value && field.length == value.length) {
+				field.forEach((e, index) => {
+					filterBody[`customID.${e}`] = value[index]
 				})
-				.catch((err) => {
-					JSONResponse.error(req, res, 500, 'Database Error', err)
-				})
-			if (list.length > 0) {
-				let subArray = list.slice(indexStart, indexStart + limit)
+			} else {
+				filterBody['customID.category'] = '6369a13a274f9c5d48860101'
+			}
+			let error = false
+			const bucket = await itemBucketModel.findOne(filterBody).catch((err) => {
+				error = true
+				JSONResponse.error(req, res, 500, 'Database Error', err)
+			})
+			if (bucket) {
+				await bucket.populate('bucket')
+				let subArray = bucket.bucket.slice(indexStart, indexStart + limit)
 				JSONResponse.success(req, res, 200, 'Collected matching documents', subArray)
-			} else JSONResponse.error(req, res, 404, 'Could not find any matching documents')
+			} else if (!bucket && !error)
+				JSONResponse.success(req, res, 200, 'Could not find any matching documents')
 		} else {
 			JSONResponse.error(req, res, 501, 'Incorrect query string')
 			return
@@ -62,10 +66,15 @@ class itemsController {
 	 */
 	static async add(req, res) {
 		let body = req.body
-		let newdoc = new itemModel(body)
 		let now = Date.now().toString(16)
-		let manageupload = await S3Helper.upload(req.files['image'], now + '_img')
+		let manageupload = await S3Helper.upload(req.files['image'][0], now + '_img')
 		if (manageupload) body.image = now + '_img'
+		manageupload = await S3Helper.upload(req.files['clip'][0], now + '_clip')
+		if (manageupload) body.clip = now + '_clip'
+		if (Array.isArray(body.categories)) body.categories.push('6369a13a274f9c5d48860101')
+		else if (body.categories) body.categories = ['6369a13a274f9c5d48860101', body.categories]
+		else body.categories = ['6369a13a274f9c5d48860101']
+		let newdoc = new itemModel(body)
 		let valid = true
 		await newdoc.validate().catch((err) => {
 			valid = false

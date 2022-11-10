@@ -106,7 +106,7 @@ class controller {
 					},
 					'jwt_auth'
 				)
-				JSONResponse.success(req, res, 200, 'Successful login')
+				JSONResponse.success(req, res, 200, 'Successful login', user)
 			} else {
 				JSONResponse.error(req, res, 401, 'Password does not match')
 			}
@@ -174,7 +174,7 @@ class controller {
 			JSONResponse.error(req, res, 500, err.message, err)
 		})
 		if (user) {
-			JSONResponse.success(req, res, 200, 'Successfully updated user', result)
+			JSONResponse.success(req, res, 200, 'Successfully updated user', user)
 		} else JSONResponse.error(req, res, 404, 'Could not find specified user')
 	}
 
@@ -191,7 +191,7 @@ class controller {
 			JSONResponse.error(req, res, 500, err.message, err)
 		})
 		if (user) {
-			JSONResponse.success(req, res, 200, 'Successfully updated user', result)
+			JSONResponse.success(req, res, 200, 'Successfully updated user', user)
 		} else JSONResponse.error(req, res, 404, 'Could not find specified user')
 	}
 
